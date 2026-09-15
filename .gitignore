@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+scratch_preview.html
+
+# Source photo used to generate ascii.svg -- kept local only, not published.
+IMG-20251204-WA0009.jpg
