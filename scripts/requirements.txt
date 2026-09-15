@@ -1,3 +1,13 @@
-fonttools>=4.55
-requests>=2.31
+# Local/manual use only -- scripts/generate_stats.py (the one that runs in
+# CI) is stdlib-only and needs none of this.
+#
+# make_portrait.py:
 Pillow>=11.0
+numpy>=2.0
+opencv-python-headless>=4.9
+rembg>=2.0
+onnxruntime>=1.18
+
+# make_portrait.py / make_heading.py (font subsetting):
+fonttools>=4.55
+brotli>=1.1

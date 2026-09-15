@@ -18,9 +18,11 @@
 
 <div align="center">
 
+<img src="./stats.svg" width="460" alt="Contributions in the last year, by week"/>
+
 <img src="./streak.svg" width="460" alt="Current and longest streak"/>
 
-<img src="./langs.svg" width="460" alt="Top languages by bytes"/>
+<img src="./langs.svg" width="460" alt="Top languages, by bytes and by repo"/>
 
 <img src="./year.svg" width="460" alt="The last year, one character per day"/>
 

@@ -1,11 +1,13 @@
 """Draw a section-heading SVG in the profile's own typeface.
 
 READMEs strip inline CSS, so headings can't be styled text in Markdown --
-they're rendered as tiny SVGs instead, with the font subset and embedded
-exactly like the portrait.
+they're rendered as tiny SVGs instead: a lowercase mono label with a
+hairline rule running to the right edge. (The alt text on the <img> is
+what carries the word to screen readers -- an image heading has no
+anchor link, so GitHub's own README outline goes empty for it.)
 
 Usage:
-    python make_heading.py "about" hd-about.svg
+    python make_heading.py "about" hd-about.svg [--width 460]
 """
 import base64
 import io
@@ -15,11 +17,12 @@ from pathlib import Path
 from fontTools import subset
 from fontTools.ttLib import TTFont
 
-FONT_PATH = Path(__file__).parent / "fonts" / "JetBrainsMono-Bold.ttf"
-FONT_SIZE_PX = 22
-PAD_X = 4
-PAD_Y = 6
+FONT_PATH = Path(__file__).parent / "fonts" / "JetBrainsMono-Regular.ttf"
+FONT_SIZE_PX = 14
 CHAR_ADVANCE_EM = 0.600
+PAD_X = 2
+HEIGHT = 24
+RULE_GAP = 12  # space between the label and where the rule starts
 
 
 def subset_font_bytes(font_path: Path, characters: str) -> bytes:
@@ -35,16 +38,16 @@ def subset_font_bytes(font_path: Path, characters: str) -> bytes:
     return buf.getvalue()
 
 
-def build_svg(label: str) -> str:
-    text = f"// {label}"
-    font_bytes = subset_font_bytes(FONT_PATH, text)
-    font_b64 = base64.b64encode(font_bytes).decode("ascii")
+def build_svg(label: str, width: int) -> str:
+    text = label.lower()
+    font_b64 = base64.b64encode(subset_font_bytes(FONT_PATH, text)).decode("ascii")
 
-    width = round(len(text) * CHAR_ADVANCE_EM * FONT_SIZE_PX) + PAD_X * 2
-    height = FONT_SIZE_PX + PAD_Y * 2
-    baseline = height - PAD_Y - round(FONT_SIZE_PX * 0.22)
+    label_width = len(text) * CHAR_ADVANCE_EM * FONT_SIZE_PX
+    rule_x = PAD_X + label_width + RULE_GAP
+    baseline = round(HEIGHT * 0.68, 2)
+    rule_y = round(HEIGHT * 0.55, 2)
 
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}">
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {HEIGHT}" width="{width}" height="{HEIGHT}">
 <defs>
 <style>
 @font-face {{
@@ -54,23 +57,31 @@ def build_svg(label: str) -> str:
 text {{
   font-family: "HeadingMono", monospace;
   font-size: {FONT_SIZE_PX}px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  fill: currentColor;
+  letter-spacing: 0.08em;
+  fill: #15181c;
+}}
+line {{ stroke: #15181c; stroke-opacity: 0.35; }}
+@media (prefers-color-scheme: dark) {{
+  text {{ fill: #e8e6e1; }}
+  line {{ stroke: #e8e6e1; stroke-opacity: 0.3; }}
 }}
 </style>
 </defs>
 <text x="{PAD_X}" y="{baseline}">{text}</text>
+<line x1="{rule_x:.2f}" y1="{rule_y}" x2="{width - PAD_X}" y2="{rule_y}" stroke-width="1"/>
 </svg>
 """
 
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        print("usage: make_heading.py <label> <output-svg>", file=sys.stderr)
+    if len(sys.argv) < 3:
+        print("usage: make_heading.py <label> <output-svg> [--width N]", file=sys.stderr)
         raise SystemExit(1)
     label, dst = sys.argv[1], Path(sys.argv[2])
-    dst.write_text(build_svg(label), encoding="utf-8")
+    width = 460
+    if "--width" in sys.argv:
+        width = int(sys.argv[sys.argv.index("--width") + 1])
+    dst.write_text(build_svg(label, width), encoding="utf-8")
     print(f"wrote {dst}")
 
 
