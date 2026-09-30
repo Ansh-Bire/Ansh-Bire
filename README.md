@@ -128,7 +128,7 @@ Added **lazy loading** to cut load time on expensive queries, and optimised a ba
 
 [![GitHub Streak](https://streak-stats.demolab.com?user=Ansh-Bire&theme=github-dark-blue&hide_border=true&border_radius=6&date_format=j%20M%5B%20Y%5D)](https://git.io/streak-stats)
 
-[![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=Ansh-Bire&theme=react-dark&hide_border=true&area=true&area_color=1e3a5f&color=94a3b8&line=3b82f6&point=e2e8f0)](https://github.com/ashutosh00710/github-readme-activity-graph)
+[![Ashutosh's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=Ansh-Bire&theme=dracula)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
 </div>
 
