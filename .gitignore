@@ -3,5 +3,5 @@ __pycache__/
 .venv/
 scratch_preview.html
 
-# Source photo used to generate ascii.svg -- kept local only, not published.
+# Full-size original photo -- kept local only. The README uses the cropped avatar.jpg.
 IMG-20251204-WA0009.jpg
